@@ -3,8 +3,10 @@ package com.example.yhle.connect3;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.support.v7.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
     int activePlayer = 0; //0 is yellow, 1 is red
@@ -57,10 +59,39 @@ public class MainActivity extends AppCompatActivity {
                     gameState[winState[0]] !=2) {
                 activeState = false;
                 String winner = "";
-                //show a toast for winner
+                //show winner message and display play again button
                 winner = (activePlayer == 0) ? "Player Red" : "Player Yellow";
-                Toast.makeText(this, winner + " has won!", Toast.LENGTH_SHORT).show();
+                TextView winnerTextView = (TextView) findViewById(R.id.winnerTextView);
+                Button playAgainBtn = (Button) findViewById(R.id.playAgainBtn);
+                winnerTextView.setText(winner + " has won!");
+                winnerTextView.setVisibility(View.VISIBLE); //0 is visible, 4 is invis
+                playAgainBtn.setVisibility(View.VISIBLE);
             }
         }
+    }
+
+    public void playAgain(View view) {
+        //reset button and messages
+        TextView winnerTextView = (TextView) findViewById(R.id.winnerTextView);
+        Button playAgainBtn = (Button) findViewById(R.id.playAgainBtn);
+        winnerTextView.setText("");
+        winnerTextView.setVisibility(View.INVISIBLE); //0 is visible, 4 is invis
+        playAgainBtn.setVisibility(View.INVISIBLE);
+
+        //reset board by iterating through all the items in the grid view
+        GridLayout gameBoardGridLayout = (GridLayout) findViewById(R.id.gameBoardGridLayout);
+        for (int i = 0; i < gameBoardGridLayout.getChildCount(); i++) {
+            //use getChildAt() to access gridLayout items
+            ImageView gameSquareView = (ImageView) gameBoardGridLayout.getChildAt(i);
+            //remove source from image source by setting drawable to null
+            gameSquareView.setImageDrawable(null);
+        }
+        //also need to reset board square to all empties, game state, and active player
+        for (int i = 0; i < gameState.length; i++) {
+            gameState[i] = 2;
+        }
+        activeState = true;
+        activePlayer = 0;
+
     }
 }
